@@ -1,5 +1,7 @@
 // src/pages/MyCampaignsPage.jsx
 import React, { useEffect, useState } from "react";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "../firebase";
 import { listenMyCampaigns } from "../api/campaignApi";
 
 function statusBadge(status) {
@@ -15,8 +17,27 @@ export default function MyCampaignsPage() {
   const [campaigns, setCampaigns] = useState([]);
 
   useEffect(() => {
-    const unsub = listenMyCampaigns(setCampaigns);
-    return () => unsub && unsub();
+    let unsubCampaigns = () => {};
+
+    // ✅ Wait for auth to be ready, then start the Firestore listener
+    const unsubAuth = onAuthStateChanged(auth, (user) => {
+      // stop previous listener (important for StrictMode + hot reload)
+      unsubCampaigns();
+
+      if (user) {
+        // ✅ pass uid to the listener
+        unsubCampaigns = listenMyCampaigns(user.uid, setCampaigns);
+      } else {
+        setCampaigns([]);
+        unsubCampaigns = () => {};
+      }
+    });
+
+    // ✅ cleanup everything
+    return () => {
+      unsubCampaigns();
+      unsubAuth();
+    };
   }, []);
 
   return (
@@ -38,7 +59,13 @@ export default function MyCampaignsPage() {
                   padding: 12,
                 }}
               >
-                <div style={{ display: "flex", justifyContent: "space-between", gap: 10 }}>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    gap: 10,
+                  }}
+                >
                   <h3 style={{ margin: 0 }}>{c.title}</h3>
                   <span
                     style={{

@@ -1,4 +1,5 @@
-// 1️⃣ IMPORTS (must be at the very top)
+// src/api/campaignApi.js
+
 import { auth, db, storage } from "../firebase";
 import {
   addDoc,
@@ -14,7 +15,9 @@ import {
 } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
-// 2️⃣ CREATE CAMPAIGN (PASTE YOUR FUNCTION HERE)
+/* =========================================================
+   CREATE CAMPAIGN
+========================================================= */
 export async function createCampaign({
   title,
   description,
@@ -44,10 +47,39 @@ export async function createCampaign({
     createdByName: user.email,
     createdAt: serverTimestamp(),
     status: "PENDING",
+    reviewedBy: null,
+    reviewedAt: null,
+    reviewNote: "",
   });
 }
 
-// 3️⃣ LISTENERS
+/* =========================================================
+   INTERNAL HELPER
+========================================================= */
+function mapSnapshot(snap) {
+  return snap.docs.map((d) => ({
+    id: d.id,
+    ...d.data(),
+  }));
+}
+
+function safeListener(q, setData) {
+  return onSnapshot(
+    q,
+    (snap) => {
+      setData(mapSnapshot(snap));
+    },
+    (error) => {
+      console.error("Firestore listener error:", error);
+      setData([]);
+    }
+  );
+}
+
+/* =========================================================
+   LISTENERS
+========================================================= */
+
 export function listenApprovedCampaigns(setCampaigns) {
   const q = query(
     collection(db, "campaigns"),
@@ -55,9 +87,7 @@ export function listenApprovedCampaigns(setCampaigns) {
     orderBy("createdAt", "desc")
   );
 
-  return onSnapshot(q, (snap) => {
-    setCampaigns(snap.docs.map((d) => ({ id: d.id, ...d.data() })));
-  });
+  return safeListener(q, setCampaigns);
 }
 
 export function listenPendingCampaigns(setCampaigns) {
@@ -67,27 +97,38 @@ export function listenPendingCampaigns(setCampaigns) {
     orderBy("createdAt", "desc")
   );
 
-  return onSnapshot(q, (snap) => {
-    setCampaigns(snap.docs.map((d) => ({ id: d.id, ...d.data() })));
-  });
+  return safeListener(q, setCampaigns);
 }
 
-export function listenMyCampaigns(setCampaigns) {
-  const user = auth.currentUser;
-  if (!user) return () => {};
+/**
+ * IMPORTANT:
+ * We now pass uid instead of reading auth.currentUser inside.
+ * This prevents null-user + StrictMode duplicate listener crash.
+ */
+export function listenMyCampaigns(uid, setCampaigns) {
+  if (!uid) {
+    setCampaigns([]);
+    return () => {};
+  }
 
   const q = query(
     collection(db, "campaigns"),
-    where("createdBy", "==", user.uid),
+    where("createdBy", "==", uid),
     orderBy("createdAt", "desc")
   );
 
-  return onSnapshot(q, (snap) => {
-    setCampaigns(snap.docs.map((d) => ({ id: d.id, ...d.data() })));
-  });
+  return safeListener(q, setCampaigns);
 }
 
-// 4️⃣ ADMIN ACTIONS
+/* For admin approved list (reuse approved listener) */
+export function listenApprovedCampaignsForAdmin(setCampaigns) {
+  return listenApprovedCampaigns(setCampaigns);
+}
+
+/* =========================================================
+   ADMIN ACTIONS
+========================================================= */
+
 export async function approveCampaign(id) {
   await updateDoc(doc(db, "campaigns", id), {
     status: "APPROVED",
@@ -106,17 +147,10 @@ export async function denyCampaign(id, note = "") {
 export async function deleteCampaign(id) {
   await deleteDoc(doc(db, "campaigns", id));
 }
-export function listenApprovedCampaignsForAdmin(setCampaigns) {
-  const q = query(
-    collection(db, "campaigns"),
-    where("status", "==", "APPROVED"),
-    orderBy("createdAt", "desc")
-  );
 
-  return onSnapshot(q, (snap) => {
-    setCampaigns(snap.docs.map((d) => ({ id: d.id, ...d.data() })));
-  });
-}
+/* =========================================================
+   SEED SAMPLE DATA
+========================================================= */
 
 export async function seedSampleCampaigns() {
   const user = auth.currentUser;
@@ -126,19 +160,19 @@ export async function seedSampleCampaigns() {
     {
       title: "Support Local, Shop Ethical",
       description:
-        "Promote local small businesses that follow ethical and sustainable practices. Encourage the community to buy local and strengthen the local economy.",
+        "Promote local small businesses that follow ethical and sustainable practices.",
       donateUrl: "https://example.com/donate-local",
     },
     {
       title: "Clean Streets, Strong Communities",
       description:
-        "Organise community clean-up drives to reduce litter and improve public spaces. Share clean-up locations and invite volunteers to join.",
+        "Organise community clean-up drives to reduce litter and improve public spaces.",
       donateUrl: "https://example.com/donate-cleanup",
     },
     {
       title: "Mental Health Matters",
       description:
-        "Raise awareness about mental health and reduce stigma. Share wellbeing resources and promote support services and student-friendly initiatives.",
+        "Raise awareness about mental health and reduce stigma.",
       donateUrl: "https://example.com/donate-mentalhealth",
     },
   ];
