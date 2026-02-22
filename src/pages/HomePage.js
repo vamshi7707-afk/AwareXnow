@@ -1,57 +1,29 @@
-import React, { useEffect, useState } from "react";
-import { listenApprovedCampaigns } from "../api/campaignApi";
+import React from "react";
+
+import {
+  Container
+} from "@mui/material";
+import HeroSection from "../sections/home/herosection";
+import AboutUs from "../sections/home/about";
+import CampaignFeed from "../sections/home/campaignfeed";
+import ContactUs from "../sections/home/contact";
 
 export default function HomePage() {
-  const [campaigns, setCampaigns] = useState([]);
-
-  useEffect(() => {
-    const unsub = listenApprovedCampaigns(setCampaigns);
-    return () => unsub();
-  }, []);
 
   return (
-    <div className="feedWrap">
-      <h2 className="pageTitle">Campaign Feed</h2>
+    <Container>
+      {/* Hero section */}
+      <HeroSection />
 
-      <div className="grid">
-        {campaigns.map((c) => (
-          <div key={c.id} className="card cardPad">
-            <div className="row" style={{ justifyContent: "space-between" }}>
-              <h3>{c.title}</h3>
-              <span className="badge">APPROVED</span>
-            </div>
+      {/* About us */}
+      <AboutUs />
 
-            {c.imageUrl && (
-              <img
-                src={c.imageUrl}
-                alt={c.title}
-                style={{
-                  width: "100%",
-                  marginTop: 12,
-                  borderRadius: 8,
-                }}
-              />
-            )}
+      {/* Campaign feed */}
+      <CampaignFeed />
 
-            <p style={{ marginTop: 12 }}>{c.description}</p>
+      {/* Contact */}
+      <ContactUs />
 
-            <div className="row" style={{ justifyContent: "space-between" }}>
-              <span className="smallMuted">By {c.createdByName}</span>
-
-              {c.donateUrl && (
-                <a
-                  href={c.donateUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="button buttonPrimary"
-                >
-                  Donate
-                </a>
-              )}
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
+    </Container>
   );
 }
