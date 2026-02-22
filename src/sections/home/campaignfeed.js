@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { listenApprovedCampaigns } from "../../api/campaignApi";
 
 import {
-    Container,
     Grid,
     Card,
     CardContent,
