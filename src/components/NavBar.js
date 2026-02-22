@@ -81,9 +81,9 @@ export default function NavBar({ user, role, onLogout }) {
               <Link className="button" to="/login">
                 Login
               </Link>
-              <Link className="button buttonPrimary" to="/register">
+              {/* <Link className="button buttonPrimary" to="/register">
                 Register
-              </Link>
+              </Link> */}
             </>
           )}
         </div>
