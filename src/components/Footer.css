@@ -1,0 +1,37 @@
+.ax-footer {
+  background: #111;
+  border-top: 1px solid #222;
+  padding: 26px 0;
+  color: #ddd;
+}
+
+.ax-footer__wrap {
+  width: min(1200px, 92%);
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.ax-footer__right {
+  display: flex;
+  gap: 22px;
+}
+
+.ax-footer a {
+  color: #ddd;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.ax-footer a:hover {
+  opacity: 0.8;
+}
+
+@media (max-width: 700px) {
+  .ax-footer__wrap {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

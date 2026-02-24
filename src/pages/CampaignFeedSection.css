@@ -1,0 +1,92 @@
+/* Container */
+.ax-feed {
+  padding: 40px 0 10px;
+}
+
+/* 3-column grid like screenshot */
+.ax-feed__grid {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 18px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 40px;
+}
+
+@media (max-width: 1050px) {
+  .ax-feed__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 700px) {
+  .ax-feed__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Card */
+.ax-card {
+  text-align: center;
+  color: #fff;
+}
+
+/* Image area (always reserved) */
+.ax-card__imageWrap {
+  border-radius: 18px;
+  overflow: hidden;
+  background: #111; /* looks like empty space on black section */
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.45);
+}
+
+/* Real image */
+.ax-card__img {
+  width: 100%;
+  height: 260px;
+  object-fit: cover;
+  display: block;
+}
+
+/* Placeholder keeps the same height even if no image */
+.ax-card__imgPlaceholder {
+  width: 100%;
+  height: 260px;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+/* Title + description like screenshot */
+.ax-card__title {
+  margin: 18px 0 10px;
+  font-size: 24px;
+  font-weight: 900;
+}
+
+.ax-card__desc {
+  margin: 0 auto 22px;
+  max-width: 360px;
+  line-height: 1.8;
+  opacity: 0.9;
+}
+
+/* Donate button */
+.ax-card__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 46px;
+  padding: 0 34px;
+  border-radius: 10px;
+  background: #b81b1b;
+  color: #fff;
+  text-decoration: none;
+  font-weight: 800;
+  transition: transform 0.12s ease, opacity 0.12s ease;
+}
+
+.ax-card__btn:hover {
+  opacity: 0.92;
+}
+
+.ax-card__btn:active {
+  transform: scale(0.99);
+}

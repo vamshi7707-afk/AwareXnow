@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { createCampaign } from "../api/campaignApi";
+import { auth } from "../firebase";
 
 export default function CreateCampaignPage() {
   const [title, setTitle] = useState("");
@@ -7,21 +8,33 @@ export default function CreateCampaignPage() {
   const [donateUrl, setDonateUrl] = useState("");
   const [imageFile, setImageFile] = useState(null);
   const [msg, setMsg] = useState("");
+  const [loading, setLoading] = useState(false);
 
   async function handleSubmit(e) {
     e.preventDefault();
+    e.stopPropagation();
+
     setMsg("");
 
-    if (!title || !description) {
+    // quick visible checks
+    if (!title.trim() || !description.trim()) {
       setMsg("Please fill all required fields.");
       return;
     }
 
+    // confirm click is firing
+    console.log("✅ Submit clicked");
+
+    // check auth
+    const user = auth.currentUser;
+    console.log("Auth user:", user?.uid || "NO USER");
+
+    setLoading(true);
     try {
       await createCampaign({
-        title,
-        description,
-        donateUrl,
+        title: title.trim(),
+        description: description.trim(),
+        donateUrl: donateUrl.trim(),
         imageFile,
       });
 
@@ -29,9 +42,20 @@ export default function CreateCampaignPage() {
       setDescription("");
       setDonateUrl("");
       setImageFile(null);
-      setMsg("Campaign submitted for admin approval.");
-    } catch (e) {
-      setMsg(e.message);
+
+      setMsg("✅ Campaign submitted for admin approval.");
+    } catch (err) {
+      console.error("❌ createCampaign failed:", err);
+
+      // show best possible error text
+      const text =
+        err?.message ||
+        err?.code ||
+        (typeof err === "string" ? err : "Something went wrong");
+
+      setMsg(`❌ ${text}`);
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -46,25 +70,48 @@ export default function CreateCampaignPage() {
         <form onSubmit={handleSubmit} className="grid">
           <div>
             <div className="label">Campaign title</div>
-            <input className="input" value={title} onChange={e => setTitle(e.target.value)} />
+            <input
+              className="input"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+            />
           </div>
 
           <div>
             <div className="label">Campaign description</div>
-            <textarea className="textarea" value={description} onChange={e => setDescription(e.target.value)} />
+            <textarea
+              className="textarea"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+            />
           </div>
 
           <div>
             <div className="label">Donate link (optional)</div>
-            <input className="input" value={donateUrl} onChange={e => setDonateUrl(e.target.value)} />
+            <input
+              className="input"
+              value={donateUrl}
+              onChange={(e) => setDonateUrl(e.target.value)}
+            />
           </div>
 
           <div>
             <div className="label">Campaign image (optional)</div>
-            <input type="file" accept="image/*" onChange={e => setImageFile(e.target.files[0])} />
+            <input
+              type="file"
+              accept="image/*"
+              onChange={(e) => setImageFile(e.target.files?.[0] || null)}
+            />
+            {imageFile ? (
+              <div className="smallMuted" style={{ marginTop: 6 }}>
+                Selected: {imageFile.name}
+              </div>
+            ) : null}
           </div>
 
-          <button className="button buttonPrimary">Submit Campaign</button>
+          <button className="button buttonPrimary" type="submit" disabled={loading}>
+            {loading ? "Submitting..." : "Submit Campaign"}
+          </button>
         </form>
 
         {msg && <div className="msg">{msg}</div>}

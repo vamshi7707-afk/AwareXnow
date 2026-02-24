@@ -1,0 +1,135 @@
+.home {
+  width: 100%;
+}
+
+/* HERO SECTION */
+.home-hero {
+  position: relative;
+  min-height: 520px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+
+  /* Replace with your own image if needed */
+  background-image: url("https://images.unsplash.com/photo-1520975958225-75692f22b1d1?auto=format&fit=crop&w=2000&q=80");
+  background-size: cover;
+  background-position: center;
+}
+
+.home-hero__overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+}
+
+.home-hero__content {
+  position: relative;
+  z-index: 2;
+  color: white;
+  max-width: 900px;
+  padding: 40px 20px;
+}
+
+.home-hero__content h1 {
+  font-size: clamp(36px, 4vw, 60px);
+  font-weight: 800;
+  margin-bottom: 15px;
+}
+
+.home-hero__content p {
+  font-size: 18px;
+  line-height: 1.6;
+  margin-bottom: 30px;
+}
+
+/* Buttons */
+.home-hero__actions {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.home-btn {
+  height: 48px;
+  padding: 0 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  font-weight: 700;
+  border-radius: 4px;
+  transition: 0.2s ease;
+}
+
+.home-btn--dark {
+  background: #111;
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.home-btn--outline {
+  background: transparent;
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+}
+
+.home-btn:hover {
+  opacity: 0.9;
+}
+
+/* FEATURED SECTION */
+.home-featured {
+  background: #000;
+  color: white;
+  padding: 80px 20px;
+  text-align: center;
+}
+
+.home-featured__inner {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.home-featured__inner h2 {
+  font-size: clamp(44px, 5vw, 70px);
+  font-weight: 900;
+  margin-bottom: 20px;
+}
+
+.home-hero {
+  position: relative;
+  min-height: 520px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+
+  background-size: cover;
+  background-position: center;
+}
+
+.home-featured__inner p {
+  font-size: 18px;
+  line-height: 1.8;
+  max-width: 850px;
+  margin: 0 auto;
+}
+/* ===== CAMPAIGN CARDS FIX ===== */
+
+.home-featured .campaign-card {
+  background: #f4f4f4;
+  color: #111; /* Override white text */
+  border-radius: 18px;
+  overflow: hidden;
+  padding: 16px;
+}
+
+.home-featured .campaign-card h3 {
+  color: #111;
+}
+
+.home-featured .campaign-card p {
+  color: #444;
+}

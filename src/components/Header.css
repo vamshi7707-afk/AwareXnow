@@ -1,0 +1,106 @@
+.ax-header {
+  background: #ffffff;
+  border-bottom: 1px solid #eaeaea;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.ax-header__container {
+  width: min(1200px, 95%);
+  margin: 0 auto;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Logo */
+.ax-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+}
+
+.ax-brand__logo {
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  background: #f2f2f2;
+  font-size: 18px;
+}
+
+.ax-brand__text {
+  font-weight: 800;
+  font-size: 20px;
+  color: #111;
+  letter-spacing: 0.3px;
+}
+
+/* Nav */
+.ax-nav {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+}
+
+.ax-nav a {
+  text-decoration: none;
+  font-weight: 600;
+  color: #111;
+  font-size: 15px;
+  transition: opacity 0.2s ease;
+}
+
+.ax-nav a:hover {
+  opacity: 0.6;
+}
+
+/* Login */
+.ax-login {
+  color: #111;
+}
+
+/* Sign up button */
+.ax-signup {
+  background: #b01212;
+  color: white !important;
+  padding: 8px 18px;
+  border-radius: 4px;
+}
+
+/* User badge */
+.ax-user {
+  background: #f2f2f2;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+/* Logout button */
+.ax-logout {
+  background: transparent;
+  border: 1px solid #111;
+  padding: 6px 14px;
+  border-radius: 4px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.ax-logout:hover {
+  background: #111;
+  color: white;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .ax-nav {
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+}

@@ -1,0 +1,133 @@
+.ax-nav {
+  background: #fff;
+  border-bottom: 1px solid #eaeaea;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.ax-nav__container {
+  width: min(1200px, 95%);
+  margin: 0 auto;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+/* Brand (left) */
+.ax-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.ax-brand__logo {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  border: 1px solid #e5e7eb;
+  background: #fafafa;
+  font-size: 18px;
+}
+
+.ax-brand__text {
+  font-weight: 800;
+  font-size: 20px;
+  color: #111;
+  letter-spacing: 0.2px;
+}
+
+/* Links (right) */
+.ax-links {
+  display: flex;
+  align-items: center;
+  gap: 26px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.ax-links a {
+  color: #111;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 15px;
+  transition: opacity 0.2s ease;
+}
+
+.ax-links a:hover {
+  opacity: 0.65;
+}
+
+/* Muted links (optional - for Create/My/Admin) */
+.ax-link--muted {
+  color: #374151 !important;
+  font-weight: 600;
+}
+
+/* Auth buttons */
+.ax-login {
+  color: #111;
+}
+
+.ax-signup {
+  background: #b01212;
+  color: #fff !important;
+  padding: 8px 16px;
+  border-radius: 4px;
+}
+
+/* Username badge */
+.ax-user {
+  background: #f3f4f6;
+  color: #111;
+  padding: 7px 14px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 13px;
+  max-width: 220px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Logout button */
+.ax-logout {
+  background: transparent;
+  border: 1px solid #111;
+  color: #111;
+  padding: 7px 14px;
+  border-radius: 4px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.ax-logout:hover {
+  background: #111;
+  color: #fff;
+}
+
+.logo-img {
+  height: 45px;
+  width: auto;
+  object-fit: contain;
+}
+
+/* Mobile */
+@media (max-width: 900px) {
+  .ax-nav__container {
+    height: auto;
+    padding: 12px 0;
+    align-items: flex-start;
+  }
+
+  .ax-links {
+    gap: 14px;
+  }
+}

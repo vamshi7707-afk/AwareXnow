@@ -1,0 +1,44 @@
+.about-page {
+  min-height: 100vh;
+  padding: 100px 20px;
+  background: linear-gradient(90deg, #1f2937, #0f172a);
+  color: #e5e7eb;
+  text-align: center;
+}
+
+.about-container {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.about-container h1 {
+  font-size: 56px;
+  margin-bottom: 30px;
+  font-weight: 800;
+}
+
+.about-container p {
+  font-size: 20px;
+  line-height: 1.8;
+  margin-bottom: 28px;
+  color: #d1d5db;
+}
+
+.about-stats {
+  margin-top: 70px;
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  gap: 40px;
+}
+
+.about-stats h2 {
+  font-size: 64px;
+  margin-bottom: 10px;
+  font-weight: 800;
+}
+
+.about-stats span {
+  font-size: 18px;
+  color: #9ca3af;
+}

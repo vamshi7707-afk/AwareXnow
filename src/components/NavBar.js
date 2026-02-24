@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import logo from "../assets/logo.png";
 import { db } from "../firebase";
 import { doc, getDoc } from "firebase/firestore";
+import "./NavBar.css";
 
 export default function NavBar({ user, role, onLogout }) {
   const [username, setUsername] = useState("");
@@ -27,33 +29,19 @@ export default function NavBar({ user, role, onLogout }) {
   }, [user]);
 
   return (
-    <div style={{ borderBottom: "1px solid #e5e7eb", background: "#ffffff" }}>
-      <div
-        style={{
-          maxWidth: 1000,
-          margin: "0 auto",
-          padding: "12px 16px",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          gap: 16,
-          flexWrap: "wrap",
-        }}
-      >
-        {/* LEFT */}
-        <div style={{ display: "flex", alignItems: "center", gap: 16, flexWrap: "wrap" }}>
-          <Link
-            to="/"
-            style={{
-              fontWeight: 600,
-              fontSize: 18,
-              color: "#111827",
-              whiteSpace: "nowrap",
-            }}
-          >
-            AwareXNow
-          </Link>
+    <header className="ax-nav">
+      <div className="ax-nav__container">
+        {/* Logo */}
+        <Link className="ax-brand" to="/">
+          <img
+            src={logo}
+            alt="Aware X Now Logo"
+            className="ax-brand__img"
+          />
+        </Link>
 
+        {/* Right Side */}
+        <nav className="ax-links">
           <Link to="/">Home</Link>
 
           {user && (
@@ -63,31 +51,28 @@ export default function NavBar({ user, role, onLogout }) {
               {role === "ADMIN" && <Link to="/admin">Admin</Link>}
             </>
           )}
-        </div>
 
-        {/* RIGHT */}
-        <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
           {user ? (
             <>
-              <span style={{ fontSize: 13, color: "#374151" }}>
-                👋 {username || "User"}
+              <span className="ax-user">
+                {username || user.displayName || user.email}
               </span>
-              <button className="button" onClick={onLogout}>
+              <button className="ax-logout" onClick={onLogout}>
                 Logout
               </button>
             </>
           ) : (
             <>
-              <Link className="button" to="/login">
+              <Link className="ax-login" to="/login">
                 Login
               </Link>
-              <Link className="button buttonPrimary" to="/register">
-                Register
+              <Link className="ax-signup" to="/register">
+                Sign Up
               </Link>
             </>
           )}
-        </div>
+        </nav>
       </div>
-    </div>
+    </header>
   );
 }

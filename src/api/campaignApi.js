@@ -4,6 +4,7 @@ import { auth, db, storage } from "../firebase";
 import {
   addDoc,
   collection,
+  deleteDoc,
   doc,
   onSnapshot,
   orderBy,
@@ -11,7 +12,6 @@ import {
   serverTimestamp,
   updateDoc,
   where,
-  deleteDoc,
 } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
@@ -21,31 +21,35 @@ import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 export async function createCampaign({
   title,
   description,
-  imageFile,
   donateUrl,
+  imageFile,
 }) {
   const user = auth.currentUser;
   if (!user) throw new Error("Not logged in");
 
   let imageUrl = "";
+  let imagePath = "";
 
+  // Optional image upload
   if (imageFile) {
-    const fileRef = ref(
-      storage,
-      `campaign-images/${user.uid}/${Date.now()}_${imageFile.name}`
-    );
-    await uploadBytes(fileRef, imageFile);
-    imageUrl = await getDownloadURL(fileRef);
+    imagePath = `campaignImages/${user.uid}/${Date.now()}_${imageFile.name}`;
+    const storageRef = ref(storage, imagePath);
+    await uploadBytes(storageRef, imageFile);
+    imageUrl = await getDownloadURL(storageRef);
   }
 
   await addDoc(collection(db, "campaigns"), {
-    title,
-    description,
-    imageUrl,
+    title: title || "",
+    description: description || "",
     donateUrl: donateUrl || "",
+    imageUrl,
+    imagePath,
+
     createdBy: user.uid,
-    createdByName: user.email,
+    createdByName: user.email || "",
+
     createdAt: serverTimestamp(),
+
     status: "PENDING",
     reviewedBy: null,
     reviewedAt: null,
@@ -54,7 +58,7 @@ export async function createCampaign({
 }
 
 /* =========================================================
-   INTERNAL HELPER
+   INTERNAL HELPERS
 ========================================================= */
 function mapSnapshot(snap) {
   return snap.docs.map((d) => ({
@@ -66,9 +70,7 @@ function mapSnapshot(snap) {
 function safeListener(q, setData) {
   return onSnapshot(
     q,
-    (snap) => {
-      setData(mapSnapshot(snap));
-    },
+    (snap) => setData(mapSnapshot(snap)),
     (error) => {
       console.error("Firestore listener error:", error);
       setData([]);
@@ -80,30 +82,30 @@ function safeListener(q, setData) {
    LISTENERS
 ========================================================= */
 
+// Everyone can see approved campaigns
 export function listenApprovedCampaigns(setCampaigns) {
   const q = query(
     collection(db, "campaigns"),
     where("status", "==", "APPROVED"),
     orderBy("createdAt", "desc")
   );
-
   return safeListener(q, setCampaigns);
 }
 
+// Admin review page: pending campaigns
 export function listenPendingCampaigns(setCampaigns) {
   const q = query(
     collection(db, "campaigns"),
     where("status", "==", "PENDING"),
     orderBy("createdAt", "desc")
   );
-
   return safeListener(q, setCampaigns);
 }
 
 /**
  * IMPORTANT:
- * We now pass uid instead of reading auth.currentUser inside.
- * This prevents null-user + StrictMode duplicate listener crash.
+ * Pass uid instead of reading auth.currentUser inside.
+ * Prevents null-user + StrictMode duplicate listener crash.
  */
 export function listenMyCampaigns(uid, setCampaigns) {
   if (!uid) {
@@ -132,15 +134,18 @@ export function listenApprovedCampaignsForAdmin(setCampaigns) {
 export async function approveCampaign(id) {
   await updateDoc(doc(db, "campaigns", id), {
     status: "APPROVED",
+    reviewedBy: auth.currentUser?.uid || null,
     reviewedAt: serverTimestamp(),
+    reviewNote: "",
   });
 }
 
 export async function denyCampaign(id, note = "") {
   await updateDoc(doc(db, "campaigns", id), {
     status: "DENIED",
-    reviewNote: note,
+    reviewedBy: auth.currentUser?.uid || null,
     reviewedAt: serverTimestamp(),
+    reviewNote: note || "",
   });
 }
 
@@ -159,32 +164,28 @@ export async function seedSampleCampaigns() {
   const samples = [
     {
       title: "Support Local, Shop Ethical",
-      description:
-        "Promote local small businesses that follow ethical and sustainable practices.",
+      description: "Promote local small businesses that follow ethical and sustainable practices.",
       donateUrl: "https://example.com/donate-local",
     },
     {
       title: "Clean Streets, Strong Communities",
-      description:
-        "Organise community clean-up drives to reduce litter and improve public spaces.",
+      description: "Organise community clean-up drives to reduce litter and improve public spaces.",
       donateUrl: "https://example.com/donate-cleanup",
     },
     {
       title: "Mental Health Matters",
-      description:
-        "Raise awareness about mental health and reduce stigma.",
+      description: "Raise awareness about mental health and reduce stigma.",
       donateUrl: "https://example.com/donate-mentalhealth",
     },
   ];
 
-  for (const c of samples) {
+  for (const s of samples) {
     await addDoc(collection(db, "campaigns"), {
-      title: c.title,
-      description: c.description,
-      donateUrl: c.donateUrl,
+      ...s,
       imageUrl: "",
+      imagePath: "",
       createdBy: user.uid,
-      createdByName: user.email || "Admin",
+      createdByName: user.email || "",
       createdAt: serverTimestamp(),
       status: "PENDING",
       reviewedBy: null,

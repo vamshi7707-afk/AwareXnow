@@ -4,9 +4,10 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { auth } from "./firebase";
 import { ensureUserProfile, getMyRole } from "./api/roleApi";
-
+import AboutPage from "./pages/AboutPage";
 import NavBar from "./components/NavBar";
-
+import Footer from "./components/Footer";
+import ContactPage from "./pages/ContactPage";
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
@@ -35,7 +36,6 @@ export default function App() {
       setUser(u);
 
       if (u) {
-        // ensure users/{uid} exists
         await ensureUserProfile();
         const r = await getMyRole();
         setRole(r);
@@ -57,43 +57,58 @@ export default function App() {
 
   return (
     <BrowserRouter>
-      <NavBar user={user} role={role} onLogout={handleLogout} />
+      {/* Layout wrapper to keep footer at bottom */}
+      <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
+        <NavBar user={user} role={role} onLogout={handleLogout} />
 
-      <Routes>
-        <Route path="/" element={<HomePage />} />
+        {/* Main content grows to push footer down */}
+        <main style={{ flex: 1 }}>
+          <Routes>
+            <Route path="/" element={<HomePage />} />
 
-        <Route path="/login" element={user ? <Navigate to="/" /> : <LoginPage />} />
-        <Route path="/register" element={user ? <Navigate to="/" /> : <RegisterPage />} />
+            <Route
+              path="/login"
+              element={user ? <Navigate to="/" /> : <LoginPage />}
+            />
+            <Route
+              path="/register"
+              element={user ? <Navigate to="/" /> : <RegisterPage />}
+            />
 
-        <Route
-          path="/create"
-          element={
-            <RequireAuth user={user}>
-              <CreateCampaignPage />
-            </RequireAuth>
-          }
-        />
+            <Route
+              path="/create"
+              element={
+                <RequireAuth user={user}>
+                  <CreateCampaignPage />
+                </RequireAuth>
+              }
+            />
 
-        <Route
-          path="/my-campaigns"
-          element={
-            <RequireAuth user={user}>
-              <MyCampaignsPage />
-            </RequireAuth>
-          }
-        />
+            <Route
+              path="/my-campaigns"
+              element={
+                <RequireAuth user={user}>
+                  <MyCampaignsPage />
+                </RequireAuth>
+              }
+            />
 
-        <Route
-          path="/admin"
-          element={
-            <RequireAdmin user={user} role={role}>
-              <AdminReviewPage />
-            </RequireAdmin>
-          }
-        />
+            <Route
+              path="/admin"
+              element={
+                <RequireAdmin user={user} role={role}>
+                  <AdminReviewPage />
+                </RequireAdmin>
+              }
+            />
+            <Route path="/about" element={<AboutPage />} />
+            <Route path="/contact" element={<ContactPage />} />
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </main>
 
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
+        <Footer />
+      </div>
     </BrowserRouter>
   );
 }

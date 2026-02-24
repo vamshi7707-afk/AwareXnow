@@ -1,5 +1,4 @@
 // src/firebase.js
-
 import { initializeApp, getApp, getApps } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { initializeFirestore, memoryLocalCache } from "firebase/firestore";
