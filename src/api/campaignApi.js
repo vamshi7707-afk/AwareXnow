@@ -45,12 +45,13 @@ export async function createCampaign({
     imageUrl,
     imagePath,
 
+    // ✅ owner field (this is what MyCampaigns will filter on)
     createdBy: user.uid,
     createdByName: user.email || "",
 
     createdAt: serverTimestamp(),
 
-    status: "PENDING",
+    status: "PENDING", // PENDING / APPROVED / DENIED
     reviewedBy: null,
     reviewedAt: null,
     reviewNote: "",
@@ -67,6 +68,10 @@ function mapSnapshot(snap) {
   }));
 }
 
+/**
+ * A safe listener that logs errors and clears state.
+ * (Used for simple queries like approved/pending.)
+ */
 function safeListener(q, setData) {
   return onSnapshot(
     q,
@@ -103,26 +108,64 @@ export function listenPendingCampaigns(setCampaigns) {
 }
 
 /**
- * IMPORTANT:
- * Pass uid instead of reading auth.currentUser inside.
- * Prevents null-user + StrictMode duplicate listener crash.
+ * ✅ MyCampaigns listener: campaigns created by ONLY this user.
+ * Includes fallback if Firestore index is missing for where + orderBy.
  */
-export function listenMyCampaigns(uid, setCampaigns) {
+export function listenMyCampaigns(uid, setCampaigns, setError) {
   if (!uid) {
     setCampaigns([]);
+    if (setError) setError("");
     return () => {};
   }
 
-  const q = query(
+  // Primary query (ordered)
+  const q1 = query(
     collection(db, "campaigns"),
     where("createdBy", "==", uid),
     orderBy("createdAt", "desc")
   );
 
-  return safeListener(q, setCampaigns);
+  // Fallback query (no orderBy -> no index needed)
+  const q2 = query(
+    collection(db, "campaigns"),
+    where("createdBy", "==", uid)
+  );
+
+  return onSnapshot(
+    q1,
+    (snap) => {
+      setCampaigns(mapSnapshot(snap));
+      if (setError) setError("");
+    },
+    (error) => {
+      console.error("listenMyCampaigns error:", error);
+      if (setError) setError(error.message || "Failed to load campaigns.");
+
+      const msg = String(error?.message || "").toLowerCase();
+
+      // If index needed, fall back so the page still shows campaigns
+      if (msg.includes("index") || msg.includes("failed-precondition")) {
+        return onSnapshot(
+          q2,
+          (snap2) => {
+            setCampaigns(mapSnapshot(snap2));
+            // keep error message visible so you know to create the index (optional)
+            // if you prefer hidden, setError("") here.
+          },
+          (err2) => {
+            console.error("listenMyCampaigns fallback error:", err2);
+            setCampaigns([]);
+            if (setError) setError(err2.message || "Failed to load campaigns.");
+          }
+        );
+      }
+
+      setCampaigns([]);
+    }
+  );
 }
 
-/* For admin approved list (reuse approved listener) */
+// For admin approved list (reuse approved listener)
 export function listenApprovedCampaignsForAdmin(setCampaigns) {
   return listenApprovedCampaigns(setCampaigns);
 }
@@ -164,12 +207,14 @@ export async function seedSampleCampaigns() {
   const samples = [
     {
       title: "Support Local, Shop Ethical",
-      description: "Promote local small businesses that follow ethical and sustainable practices.",
+      description:
+        "Promote local small businesses that follow ethical and sustainable practices.",
       donateUrl: "https://example.com/donate-local",
     },
     {
       title: "Clean Streets, Strong Communities",
-      description: "Organise community clean-up drives to reduce litter and improve public spaces.",
+      description:
+        "Organise community clean-up drives to reduce litter and improve public spaces.",
       donateUrl: "https://example.com/donate-cleanup",
     },
     {

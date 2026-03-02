@@ -9,6 +9,7 @@ import Button from "@mui/material/Button";
 import DeleteIcon from "@mui/icons-material/Delete";
 import PaidIcon from "@mui/icons-material/Paid";
 import Stack from "@mui/material/Stack";
+import Alert from "@mui/material/Alert";
 
 function statusBadge(status) {
   const map = {
@@ -16,17 +17,20 @@ function statusBadge(status) {
     PENDING: { label: "PENDING", bg: "#fff8e1", border: "#f9a825" },
     DENIED: { label: "DENIED", bg: "#ffebee", border: "#c62828" },
   };
-  return map[status] || { label: status, bg: "#eee", border: "#777" };
+  return map[status] || { label: status || "PENDING", bg: "#eee", border: "#777" };
 }
 
 export default function MyCampaignsPage() {
   const [campaigns, setCampaigns] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [err, setErr] = useState("");
 
   const onDelete = async (id) => {
     try {
       await deleteCampaign(id);
     } catch (e) {
       console.error("Delete failed:", e);
+      setErr(e.message || "Delete failed.");
     }
   };
 
@@ -35,11 +39,25 @@ export default function MyCampaignsPage() {
 
     const unsubAuth = onAuthStateChanged(auth, (user) => {
       unsubCampaigns();
+      setErr("");
+      setLoading(true);
 
       if (user) {
-        unsubCampaigns = listenMyCampaigns(user.uid, setCampaigns);
+        // IMPORTANT: this listens ONLY campaigns created by this user uid
+        unsubCampaigns = listenMyCampaigns(
+          user.uid,
+          (rows) => {
+            setCampaigns(rows);
+            setLoading(false);
+          },
+          (message) => {
+            setErr(message || "Failed to load campaigns.");
+            setLoading(false);
+          }
+        );
       } else {
         setCampaigns([]);
+        setLoading(false);
         unsubCampaigns = () => {};
       }
     });
@@ -54,7 +72,15 @@ export default function MyCampaignsPage() {
     <div style={{ padding: 16 }}>
       <h2>My Campaigns</h2>
 
-      {campaigns.length === 0 ? (
+      {err ? (
+        <Alert severity="warning" sx={{ mb: 2 }}>
+          {err}
+        </Alert>
+      ) : null}
+
+      {loading ? (
+        <p>Loading...</p>
+      ) : campaigns.length === 0 ? (
         <p>You haven’t created any campaigns yet.</p>
       ) : (
         <Grid container spacing={3}>
@@ -71,7 +97,7 @@ export default function MyCampaignsPage() {
                     background: "#fff",
                   }}
                 >
-                  {/* Image (shows only if uploaded) */}
+                  {/* Image */}
                   {c.imageUrl ? (
                     <img
                       src={c.imageUrl}
@@ -98,7 +124,7 @@ export default function MyCampaignsPage() {
                         alignItems: "flex-start",
                       }}
                     >
-                      <h3 style={{ margin: 0 }}>{c.title}</h3>
+                      <h3 style={{ margin: 0 }}>{c.title || "Untitled"}</h3>
                       <span
                         style={{
                           padding: "4px 10px",
@@ -135,13 +161,9 @@ export default function MyCampaignsPage() {
                           variant="contained"
                           startIcon={<PaidIcon />}
                           onClick={() => {
-                            // Change this route if your donate page is different
                             window.location.href = `/campaign/${c.id}`;
                           }}
-                          sx={{
-                            textTransform: "none",
-                            borderRadius: 2,
-                          }}
+                          sx={{ textTransform: "none", borderRadius: 2 }}
                         >
                           Donate
                         </Button>

@@ -11,10 +11,8 @@ export default function Footer() {
         </div>
 
         <div className="ax-footer__right">
-          <Link to="/about">About</Link>
-          <Link to="/privacy">Privacy</Link>
-          <Link to="/terms">Terms</Link>
-          <Link to="/contact">Contact Us</Link>
+          <a href="#about">About</a>
+          <a href="#contact">Contact</a>
         </div>
       </div>
     </footer>

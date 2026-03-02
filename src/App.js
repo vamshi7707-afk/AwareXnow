@@ -101,8 +101,7 @@ export default function App() {
                 </RequireAdmin>
               }
             />
-            <Route path="/about" element={<AboutPage />} />
-            <Route path="/contact" element={<ContactPage />} />
+            
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </main>
