@@ -696,3 +696,21 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* SMALL BUSINESS SECTION */
+
+.home-smallbusiness {
+  background-color: #f5f7fa; /* light grey */
+  padding: 80px 0;
+}
+
+.home-smallbusiness h2 {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.home-smallbusiness p {
+  text-align: center;
+  margin-bottom: 40px;
+  color: #555;
+}

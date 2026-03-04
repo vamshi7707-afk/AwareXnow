@@ -43,7 +43,6 @@ export default function MyCampaignsPage() {
       setLoading(true);
 
       if (user) {
-        // IMPORTANT: this listens ONLY campaigns created by this user uid
         unsubCampaigns = listenMyCampaigns(
           user.uid,
           (rows) => {
@@ -72,11 +71,11 @@ export default function MyCampaignsPage() {
     <div style={{ padding: 16 }}>
       <h2>My Campaigns</h2>
 
-      {err ? (
+      {err && (
         <Alert severity="warning" sx={{ mb: 2 }}>
           {err}
         </Alert>
-      ) : null}
+      )}
 
       {loading ? (
         <p>Loading...</p>
@@ -97,34 +96,28 @@ export default function MyCampaignsPage() {
                     background: "#fff",
                   }}
                 >
-                  {/* Image */}
-                  {c.imageUrl ? (
+                  {c.imageUrl && (
                     <img
                       src={c.imageUrl}
-                      alt={c.title || "Campaign image"}
+                      alt={c.title || "Campaign"}
                       style={{
                         width: "100%",
                         height: 180,
                         objectFit: "cover",
-                        display: "block",
-                      }}
-                      loading="lazy"
-                      onError={(e) => {
-                        e.currentTarget.style.display = "none";
                       }}
                     />
-                  ) : null}
+                  )}
 
                   <div style={{ padding: 12 }}>
                     <div
                       style={{
                         display: "flex",
                         justifyContent: "space-between",
-                        gap: 10,
                         alignItems: "flex-start",
                       }}
                     >
                       <h3 style={{ margin: 0 }}>{c.title || "Untitled"}</h3>
+
                       <span
                         style={{
                           padding: "4px 10px",
@@ -132,8 +125,6 @@ export default function MyCampaignsPage() {
                           background: b.bg,
                           border: `1px solid ${b.border}`,
                           fontSize: 12,
-                          height: "fit-content",
-                          whiteSpace: "nowrap",
                         }}
                       >
                         {b.label}
@@ -144,8 +135,7 @@ export default function MyCampaignsPage() {
                       {c.description || "No description provided."}
                     </p>
 
-                    {/* Actions */}
-                    <Stack direction="row" spacing={1} alignItems="center">
+                    <Stack direction="row" spacing={1}>
                       <Button
                         variant="text"
                         color="error"
@@ -155,27 +145,24 @@ export default function MyCampaignsPage() {
                         Delete
                       </Button>
 
-                      {/* Donate button (only for approved campaigns) */}
-                      {c.status === "APPROVED" ? (
+                      {c.status === "APPROVED" && (
                         <Button
                           variant="contained"
                           startIcon={<PaidIcon />}
-                          onClick={() => {
-                            window.location.href = `/campaign/${c.id}`;
-                          }}
-                          sx={{ textTransform: "none", borderRadius: 2 }}
+                          onClick={() =>
+                            (window.location.href = `/campaign/${c.id}`)
+                          }
                         >
                           Donate
                         </Button>
-                      ) : null}
+                      )}
                     </Stack>
 
-                    {/* Denied reason */}
-                    {c.status === "DENIED" && c.reviewNote ? (
-                      <p style={{ margin: "10px 0 0" }}>
+                    {c.status === "DENIED" && c.reviewNote && (
+                      <p style={{ marginTop: 10 }}>
                         <b>Reason:</b> {c.reviewNote}
                       </p>
-                    ) : null}
+                    )}
                   </div>
                 </div>
               </Grid>

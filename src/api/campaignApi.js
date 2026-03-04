@@ -18,12 +18,7 @@ import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 /* =========================================================
    CREATE CAMPAIGN
 ========================================================= */
-export async function createCampaign({
-  title,
-  description,
-  donateUrl,
-  imageFile,
-}) {
+export async function createCampaign({ title, description, donateUrl, imageFile }) {
   const user = auth.currentUser;
   if (!user) throw new Error("Not logged in");
 
@@ -45,7 +40,7 @@ export async function createCampaign({
     imageUrl,
     imagePath,
 
-    // ✅ owner field (this is what MyCampaigns will filter on)
+    // owner field (MyCampaigns filters on this)
     createdBy: user.uid,
     createdByName: user.email || "",
 
@@ -69,8 +64,8 @@ function mapSnapshot(snap) {
 }
 
 /**
- * A safe listener that logs errors and clears state.
- * (Used for simple queries like approved/pending.)
+ * Simple safe listener helper.
+ * Note: it only supports (q, setData). If you need errors, handle in caller.
  */
 function safeListener(q, setData) {
   return onSnapshot(
@@ -109,7 +104,17 @@ export function listenPendingCampaigns(setCampaigns) {
 
 /**
  * ✅ MyCampaigns listener: campaigns created by ONLY this user.
- * Includes fallback if Firestore index is missing for where + orderBy.
+ *
+ * Primary query:
+ *   where(createdBy == uid) + orderBy(createdAt desc)
+ *   -> requires a composite index in Firestore
+ *
+ * Fallback query:
+ *   where(createdBy == uid)
+ *   -> no composite index needed (but not sorted)
+ *
+ * This implementation CLEANLY switches to fallback and returns
+ * a proper unsubscribe function (no leaked listeners).
  */
 export function listenMyCampaigns(uid, setCampaigns, setError) {
   if (!uid) {
@@ -118,20 +123,18 @@ export function listenMyCampaigns(uid, setCampaigns, setError) {
     return () => {};
   }
 
-  // Primary query (ordered)
   const q1 = query(
     collection(db, "campaigns"),
     where("createdBy", "==", uid),
     orderBy("createdAt", "desc")
   );
 
-  // Fallback query (no orderBy -> no index needed)
-  const q2 = query(
-    collection(db, "campaigns"),
-    where("createdBy", "==", uid)
-  );
+  const q2 = query(collection(db, "campaigns"), where("createdBy", "==", uid));
 
-  return onSnapshot(
+  let unsub = () => {};
+
+  // Start with ordered query
+  unsub = onSnapshot(
     q1,
     (snap) => {
       setCampaigns(mapSnapshot(snap));
@@ -139,18 +142,27 @@ export function listenMyCampaigns(uid, setCampaigns, setError) {
     },
     (error) => {
       console.error("listenMyCampaigns error:", error);
-      if (setError) setError(error.message || "Failed to load campaigns.");
 
       const msg = String(error?.message || "").toLowerCase();
 
-      // If index needed, fall back so the page still shows campaigns
+      // If index is missing, switch to fallback query (no orderBy)
       if (msg.includes("index") || msg.includes("failed-precondition")) {
-        return onSnapshot(
+        if (setError) {
+          setError("Firestore index missing. Showing campaigns without sorting (create the index to sort by latest).");
+        }
+
+        // Stop q1 listener first
+        try {
+          unsub();
+        } catch {
+          // ignore
+        }
+
+        // Start fallback listener
+        unsub = onSnapshot(
           q2,
           (snap2) => {
             setCampaigns(mapSnapshot(snap2));
-            // keep error message visible so you know to create the index (optional)
-            // if you prefer hidden, setError("") here.
           },
           (err2) => {
             console.error("listenMyCampaigns fallback error:", err2);
@@ -158,11 +170,24 @@ export function listenMyCampaigns(uid, setCampaigns, setError) {
             if (setError) setError(err2.message || "Failed to load campaigns.");
           }
         );
+
+        return;
       }
 
+      // Other errors
       setCampaigns([]);
+      if (setError) setError(error.message || "Failed to load campaigns.");
     }
   );
+
+  // Always return a valid unsubscribe
+  return () => {
+    try {
+      unsub();
+    } catch {
+      // ignore
+    }
+  };
 }
 
 // For admin approved list (reuse approved listener)
@@ -207,14 +232,12 @@ export async function seedSampleCampaigns() {
   const samples = [
     {
       title: "Support Local, Shop Ethical",
-      description:
-        "Promote local small businesses that follow ethical and sustainable practices.",
+      description: "Promote local small businesses that follow ethical and sustainable practices.",
       donateUrl: "https://example.com/donate-local",
     },
     {
       title: "Clean Streets, Strong Communities",
-      description:
-        "Organise community clean-up drives to reduce litter and improve public spaces.",
+      description: "Organise community clean-up drives to reduce litter and improve public spaces.",
       donateUrl: "https://example.com/donate-cleanup",
     },
     {

@@ -1,12 +1,19 @@
+// src/pages/HomePage.js
 import React from "react";
 import { Link } from "react-router-dom";
 import mainpage from "../assets/mainpage.jpg";
 import CampaignFeedSection from "./CampaignFeedSection";
+import SmallBusinessFeed from "./SmallBusinessFeed"; // ✅ make sure this path matches where you saved SmallBusinessFeed
 import "./HomePage.css";
 
 export default function HomePage() {
   const scrollToCampaigns = () => {
     const section = document.getElementById("campaign-feed");
+    if (section) section.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
+  const scrollToSmallBusiness = () => {
+    const section = document.getElementById("small-business");
     if (section) section.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
@@ -37,6 +44,14 @@ export default function HomePage() {
               Explore Campaigns
             </button>
 
+            <button
+              type="button"
+              className="home-btn home-btn--outline"
+              onClick={scrollToSmallBusiness}
+            >
+              Explore Small Businesses
+            </button>
+
             <Link className="home-btn home-btn--outline" to="/create">
               Create Campaign
             </Link>
@@ -56,6 +71,14 @@ export default function HomePage() {
         </div>
 
         <CampaignFeedSection />
+      </section>
+
+      {/* SMALL BUSINESS SECTION */}
+      <section className="home-smallbusiness" id="small-business">
+        
+
+        {/* If you want the title inside SmallBusinessFeed only, remove the above h2/p */}
+        <SmallBusinessFeed />
       </section>
 
       {/* ABOUT SECTION */}
