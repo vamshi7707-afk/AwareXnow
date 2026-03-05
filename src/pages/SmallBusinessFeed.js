@@ -48,34 +48,41 @@ export default function SmallBusinessSection() {
   ];
 
   return (
-  <section className="sb-section" id="small-business">
-    <div className="sb-inner">
-      <div className="home-featured__inner">
-                <h2>Small Businesses</h2>
-                <p>
-                  Support local businesses that keep our communities strong. Explore
-                  and connect with trusted suppliers and services.
-                </p>
-              </div>
+    <section className="sb-section" id="small-business">
+      <div className="sb-inner">
 
-      <div className="sb-grid">
-        {businesses.map((b) => (
-          <article className="sb-card" key={b.id}>
-            <div className="sb-card__top">
+        {/* Header */}
+        <div className="sb-header">
+          <h2>Small Businesses</h2>
+          <p>
+            Support local businesses that keep our communities strong. Explore
+            and connect with trusted suppliers and services.
+          </p>
+        </div>
+
+        {/* Grid */}
+        <div className="sb-grid">
+          {businesses.map((b) => (
+            <article className="sb-card" key={b.id}>
               <h3>{b.title}</h3>
-            </div>
 
-            <p className="sb-card__desc">{b.description}</p>
+              <p className="sb-card__desc">{b.description}</p>
 
-            <div className="sb-card__actions">
-              <a className="sb-btn" href={b.url} target="_blank" rel="noreferrer">
-                Visit
-              </a>
-            </div>
-          </article>
-        ))}
+              <div className="sb-card__actions">
+                <a
+                  className="sb-btn"
+                  href={b.url}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Visit
+                </a>
+              </div>
+            </article>
+          ))}
+        </div>
+
       </div>
-    </div>
-  </section>
-);
+    </section>
+  );
 }

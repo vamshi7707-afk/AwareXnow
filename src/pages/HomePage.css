@@ -2,7 +2,49 @@
   width: 100%;
 }
 
-/* HERO SECTION */
+/* =========================================================
+   REUSABLE BACKGROUND SECTIONS (FC / SMB / AU / CS)
+   ========================================================= */
+
+.section-bg {
+  position: relative;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* Default (light) overlay if you ever need it */
+.section-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(1px);
+}
+
+/* ✅ DARK OVERLAY (use this on FC / SMB / AU / CS to match Featured) */
+.section-overlay--dark,
+.section-overlay--featured {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.62) 0%,
+    rgba(0, 0, 0, 0.42) 45%,
+    rgba(0, 0, 0, 0.62) 100%
+  );
+  backdrop-filter: blur(1px);
+}
+
+/* Keep content above overlay */
+.section-content {
+  position: relative;
+  z-index: 2;
+}
+
+/* =========================================================
+   HERO SECTION
+   ========================================================= */
+
 .home-hero {
   position: relative;
   min-height: 520px;
@@ -11,8 +53,6 @@
   justify-content: center;
   text-align: center;
 
-  /* Replace with your own image if needed */
-  background-image: url("https://images.unsplash.com/photo-1520975958225-75692f22b1d1?auto=format&fit=crop&w=2000&q=80");
   background-size: cover;
   background-position: center;
 }
@@ -26,7 +66,7 @@
 .home-hero__content {
   position: relative;
   z-index: 2;
-  color: white;
+  color: #fff;
   max-width: 900px;
   padding: 40px 20px;
 }
@@ -59,280 +99,168 @@
   justify-content: center;
   text-decoration: none;
   font-weight: 700;
-  border-radius: 4px;
+  border-radius: 10px;
   transition: 0.2s ease;
 }
 
 .home-btn--dark {
   background: #111;
-  color: white;
+  color: #fff;
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .home-btn--outline {
   background: transparent;
-  color: white;
+  color: #fff;
   border: 1px solid rgba(255, 255, 255, 0.6);
 }
 
 .home-btn:hover {
-  opacity: 0.9;
+  opacity: 0.92;
 }
 
-/* FEATURED SECTION */
-.home-featured {
-  background: #000;
-  color: white;
-  padding: 80px 20px;
+/* =========================================================
+   SECTION HEADERS (shared look like Featured)
+   ========================================================= */
+
+.home-featured,
+.home-smallbusiness,
+.ax-aboutV2,
+.ax-contactV2 {
+  padding: 90px 20px;
   text-align: center;
+  color: #fff;
 }
 
-.home-featured__inner {
+/* Glass header panel */
+.home-featured__inner,
+.sb-head,
+.ax-aboutV2__header,
+.ax-contactV2__header {
   max-width: 1000px;
+  margin: 0 auto 34px;
+  padding: 18px 18px;
+  border-radius: 18px;
+  background: rgba(0, 0, 0, 0.26);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.28);
+}
+
+/* Titles */
+.home-featured__inner h2,
+.sb-head h2,
+.ax-aboutV2__header h2,
+.ax-contactV2__header h2 {
+  margin: 0 0 12px;
+  font-size: clamp(40px, 5vw, 72px);
+  font-weight: 950;
+  letter-spacing: -0.03em;
+  color: #fff;
+  text-shadow: 0 10px 30px rgba(0, 0, 0, 0.55);
+}
+
+/* Paragraphs */
+.home-featured__inner p,
+.sb-head p,
+.ax-aboutV2__header p,
+.ax-contactV2__header p {
   margin: 0 auto;
-}
-
-.home-featured__inner h2 {
-  font-size: clamp(44px, 5vw, 70px);
-  font-weight: 900;
-  margin-bottom: 20px;
-}
-
-.home-hero {
-  position: relative;
-  min-height: 520px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-
-  background-size: cover;
-  background-position: center;
-}
-
-.home-featured__inner p {
-  font-size: 18px;
-  line-height: 1.8;
   max-width: 850px;
-  margin: 0 auto;
+  font-size: 16px;
+  line-height: 1.8;
+  color: rgba(255, 255, 255, 0.88);
+  text-shadow: 0 8px 22px rgba(0, 0, 0, 0.45);
 }
-/* ===== CAMPAIGN CARDS FIX ===== */
 
-.home-featured .campaign-card {
-  background: #f4f4f4;
-  color: #111; /* Override white text */
+/* =========================================================
+   FEATURED CAMPAIGNS (CampaignFeedSection.css uses .ax-card)
+   ========================================================= */
+
+.home-featured .ax-card {
+  padding: 16px 14px 18px;
+  border-radius: 18px;
+  background: rgba(10, 15, 25, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 0 18px 55px rgba(0, 0, 0, 0.30);
+  backdrop-filter: blur(8px);
+}
+
+.home-featured .ax-card__imageWrap {
   border-radius: 18px;
   overflow: hidden;
-  padding: 16px;
+  background: rgba(0, 0, 0, 0.55);
+  box-shadow: 0 18px 55px rgba(0, 0, 0, 0.55);
 }
 
-.home-featured .campaign-card h3 {
-  color: #111;
+.home-featured .ax-card__title {
+  margin: 16px 0 10px;
+  font-size: 24px;
+  font-weight: 950;
+  color: #fff;
+  text-shadow: 0 8px 18px rgba(0, 0, 0, 0.45);
 }
 
-.home-featured .campaign-card p {
-  color: #444;
-}
-
-/* =========================
-   ABOUT SECTION (UNDER FEATURED)
-   ========================= */
-
-.ax-about {
-  background: #ffffff;
-  padding: 90px 20px;
-}
-
-.ax-about .ax-container {
-  max-width: 1100px;
-  margin: 0 auto;
-}
-
-.ax-about h2 {
-  font-size: clamp(36px, 4vw, 52px);
-  font-weight: 900;
-  margin-bottom: 20px;
-  text-align: center;
-  color: #111;
-}
-
-.ax-about .ax-intro {
-  text-align: center;
-  max-width: 900px;
-  margin: 0 auto 50px;
-  font-size: 18px;
+.home-featured .ax-card__desc {
+  margin: 0 auto 18px;
+  max-width: 360px;
   line-height: 1.8;
-  color: #555;
+  color: rgba(255, 255, 255, 0.86);
+  opacity: 1;
+  text-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
 }
 
-/* Two column mission cards */
-.ax-about-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 25px;
-  margin-bottom: 60px;
+.home-featured .ax-card__btn {
+  background: #b81b1b;
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
 }
 
-.ax-about-card {
-  background: #f8f8f8;
-  padding: 30px;
-  border-radius: 20px;
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.06);
-  transition: 0.3s ease;
+.home-featured .ax-card__btn:hover {
+  opacity: 0.95;
+  transform: translateY(-1px);
 }
 
-.ax-about-card:hover {
-  transform: translateY(-5px);
+/* =========================================================
+   SMALL BUSINESS (SmallBusinessFeed.css uses .sb-card, .sb-btn)
+   ========================================================= */
+
+/* IMPORTANT: do NOT set background: on .sb-section inside its own CSS
+   (it will hide the image). Your sb-section should be transparent.
+*/
+.sb-section {
+  background: transparent !important;
 }
 
-.ax-about-card h3 {
-  margin-bottom: 15px;
-  font-size: 20px;
-  font-weight: 800;
-  color: #111;
+/* Dark glass cards */
+.sb-card {
+  background: rgba(10, 15, 25, 0.55) !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  box-shadow: 0 18px 55px rgba(0, 0, 0, 0.30) !important;
+  backdrop-filter: blur(8px);
 }
 
-.ax-about-card p {
-  color: #555;
-  line-height: 1.8;
+.sb-card__top h3 {
+  color: #fff !important;
 }
 
-/* Stats Row */
-.ax-stats {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
+.sb-card__desc {
+  color: rgba(255, 255, 255, 0.84) !important;
 }
 
-.ax-stat {
-  background: #111;
-  color: white;
-  padding: 25px;
-  border-radius: 20px;
-  text-align: center;
-  transition: 0.3s ease;
+.sb-btn {
+  background: rgba(255, 255, 255, 0.12) !important;
+  color: #fff !important;
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
 }
 
-.ax-stat:hover {
-  background: #222;
+.sb-btn:hover {
+  background: rgba(255, 255, 255, 0.18) !important;
 }
 
-.ax-stat-number {
-  font-size: 28px;
-  font-weight: 900;
-  margin-bottom: 8px;
-}
-
-.ax-stat-label {
-  font-size: 14px;
-  opacity: 0.85;
-}
-
-/* =========================
-   CONTACT SECTION
-   ========================= */
-
-.ax-contact {
-  background: #000;
-  color: white;
-  padding: 90px 20px;
-}
-
-.ax-contact .ax-container {
-  max-width: 1100px;
-  margin: 0 auto;
-}
-
-.ax-contact h2 {
-  text-align: center;
-  font-size: clamp(36px, 4vw, 52px);
-  font-weight: 900;
-  margin-bottom: 20px;
-}
-
-.ax-contact-intro {
-  text-align: center;
-  max-width: 800px;
-  margin: 0 auto 50px;
-  line-height: 1.8;
-  color: #ccc;
-}
-
-.ax-contact-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 40px;
-}
-
-.ax-contact-info {
-  background: #111;
-  padding: 30px;
-  border-radius: 20px;
-}
-
-.ax-contact-info h3 {
-  margin-bottom: 20px;
-}
-
-.ax-contact-info p {
-  margin-bottom: 15px;
-  color: #ccc;
-}
-
-.ax-contact-form {
-  background: #111;
-  padding: 30px;
-  border-radius: 20px;
-}
-
-.ax-contact-form input,
-.ax-contact-form textarea {
-  width: 100%;
-  margin-bottom: 15px;
-  padding: 12px;
-  border-radius: 10px;
-  border: none;
-  outline: none;
-}
-
-.ax-contact-form button {
-  width: 100%;
-  padding: 14px;
-  border-radius: 10px;
-  border: none;
-  background: white;
-  color: #000;
-  font-weight: 700;
-  cursor: pointer;
-  transition: 0.3s ease;
-}
-
-.ax-contact-form button:hover {
-  background: #ddd;
-}
-
-/* =========================
-   RESPONSIVE
-   ========================= */
-
-@media (max-width: 900px) {
-  .ax-about-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .ax-stats {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .ax-contact-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-
-/* =========================
-   ABOUT + CONTACT (V2 Redesign)
-   ========================= */
+/* =========================================================
+   ABOUT (glass panels)
+   ========================================================= */
 
 .ax-wrap {
   max-width: 1100px;
@@ -340,150 +268,46 @@
   padding: 0 20px;
 }
 
-/* ---------- ABOUT ---------- */
-.ax-aboutV2 {
-  background: #fff;
-  padding: 70px 0 80px; /* reduced top whitespace */
-}
-
-.ax-aboutV2__header {
-  text-align: center;
-  max-width: 900px;
-  margin: 0 auto 26px; /* tighter */
-}
-
-.ax-aboutV2__badge {
-  display: inline-block;
-  padding: 6px 12px;
-  border-radius: 999px;
-  background: rgba(0,0,0,0.06);
-  font-weight: 800;
-  font-size: 12px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  margin-bottom: 14px;
-}
-
-.ax-aboutV2__header h2 {
-  margin: 0 0 12px;
-  font-size: clamp(34px, 4vw, 56px);
-  line-height: 1.05;
-  font-weight: 950;
-  color: #0b1220;
-}
-
-.ax-aboutV2__header p {
-  margin: 0;
-  font-size: 16px;
-  line-height: 1.8;
-  color: rgba(0,0,0,0.68);
-}
-
-/* About content grid */
 .ax-aboutV2__grid {
   display: grid;
   grid-template-columns: 1.1fr 0.9fr;
   gap: 18px;
   margin-top: 22px;
+  text-align: left;
 }
 
-/* Reusable panels */
-.ax-panel {
-  border-radius: 18px;
-  padding: 20px 20px;
-  background: #ffffff;
-  border: 1px solid rgba(0,0,0,0.08);
-  box-shadow: 0 18px 45px rgba(0,0,0,0.06);
-}
-
-.ax-panel h3 {
-  margin: 0 0 10px;
-  font-size: 18px;
-  font-weight: 900;
-  color: #0b1220;
-}
-
-.ax-panel p {
-  margin: 0 0 10px;
-  color: rgba(0,0,0,0.70);
-  line-height: 1.75;
-}
-
-.ax-panel--dark {
-  background: #0b1220;
-  border-color: rgba(255,255,255,0.08);
-  box-shadow: 0 18px 45px rgba(0,0,0,0.16);
-}
-
-.ax-panel--dark h3 {
+/* Make about panels dark-glass */
+.ax-aboutV2 .ax-panel,
+.ax-aboutV2 .ax-ctaBox,
+.ax-aboutV2 .ax-statCard {
+  background: rgba(10, 15, 25, 0.55) !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  box-shadow: 0 18px 55px rgba(0, 0, 0, 0.30) !important;
+  backdrop-filter: blur(8px);
   color: #fff;
 }
 
-.ax-panel--dark p {
-  color: rgba(255,255,255,0.78);
+.ax-aboutV2 .ax-panel h3,
+.ax-aboutV2 .ax-ctaBox h3 {
+  color: #fff !important;
 }
 
-/* Pills */
-.ax-pillRow {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 12px;
+.ax-aboutV2 .ax-panel p,
+.ax-aboutV2 .ax-ctaBox p {
+  color: rgba(255, 255, 255, 0.84) !important;
 }
 
 .ax-pill {
-  display: inline-flex;
-  padding: 8px 12px;
-  border-radius: 999px;
-  font-weight: 800;
-  font-size: 12px;
-  background: rgba(11,18,32,0.06);
-  color: #0b1220;
+  background: rgba(255, 255, 255, 0.12) !important;
+  color: #fff !important;
 }
 
-.ax-panel--dark .ax-pill {
-  background: rgba(255,255,255,0.10);
-  color: #fff;
-}
-
-/* Checklist */
-.ax-checklist {
-  list-style: none;
-  padding: 0;
-  margin: 12px 0 0;
-  display: grid;
-  gap: 10px;
-}
-
-.ax-checklist li {
-  display: grid;
-  grid-template-columns: 18px 1fr;
-  gap: 10px;
-  align-items: start;
-  color: rgba(255,255,255,0.82);
-  line-height: 1.6;
-}
-
-.ax-checklist li span {
-  font-weight: 900;
-}
-
-/* Stats */
+/* Stats row */
 .ax-statsV2 {
-  margin-top: 18px; /* tight */
+  margin-top: 18px;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 14px;
-}
-
-.ax-statCard {
-  border-radius: 18px;
-  padding: 18px 14px;
-  background: linear-gradient(180deg, #0b1220, #121a2b);
-  color: #fff;
-  text-align: center;
-  box-shadow: 0 18px 40px rgba(0,0,0,0.14);
-  border: 1px solid rgba(255,255,255,0.08);
 }
 
 .ax-statCard__num {
@@ -505,30 +329,7 @@
   gap: 14px;
 }
 
-.ax-ctaBox {
-  border-radius: 18px;
-  padding: 18px;
-  background: #fff;
-  border: 1px solid rgba(0,0,0,0.08);
-  box-shadow: 0 18px 45px rgba(0,0,0,0.06);
-}
-
-.ax-ctaBox--soft {
-  background: rgba(11,18,32,0.04);
-}
-
-.ax-ctaBox h3 {
-  margin: 0 0 8px;
-  font-weight: 950;
-  color: #0b1220;
-}
-
-.ax-ctaBox p {
-  margin: 0 0 14px;
-  color: rgba(0,0,0,0.70);
-  line-height: 1.7;
-}
-
+/* Buttons */
 .ax-ctaBtn {
   display: inline-flex;
   align-items: center;
@@ -542,100 +343,78 @@
 }
 
 .ax-ctaBtn--dark {
-  background: #0b1220;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.18);
   color: #fff;
 }
 
 .ax-ctaBtn--outline {
   background: transparent;
-  border-color: rgba(11,18,32,0.35);
-  color: #0b1220;
+  border-color: rgba(255, 255, 255, 0.28);
+  color: #fff;
 }
 
 .ax-ctaBtn:hover {
   filter: brightness(0.95);
 }
 
-/* ---------- CONTACT ---------- */
-.ax-contactV2 {
-  background: #000;
-  color: #fff;
-  padding: 70px 0 90px;
-}
-
-.ax-contactV2__header {
-  text-align: center;
-  max-width: 900px;
-  margin: 0 auto 26px;
-}
-
-.ax-contactV2__badge {
-  display: inline-block;
-  padding: 6px 12px;
-  border-radius: 999px;
-  background: rgba(255,255,255,0.12);
-  font-weight: 800;
-  font-size: 12px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  margin-bottom: 14px;
-}
-
-.ax-contactV2__header h2 {
-  margin: 0 0 12px;
-  font-size: clamp(34px, 4vw, 56px);
-  line-height: 1.05;
-  font-weight: 950;
-}
-
-.ax-contactV2__header p {
-  margin: 0;
-  font-size: 16px;
-  line-height: 1.8;
-  color: rgba(255,255,255,0.78);
-}
+/* =========================================================
+   CONTACT (left panel dark glass, form stays white)
+   ========================================================= */
 
 .ax-contactV2__grid {
   display: grid;
   grid-template-columns: 0.95fr 1.05fr;
   gap: 18px;
   margin-top: 22px;
+  text-align: left;
 }
 
-/* Info rows */
+/* Left info panel dark-glass */
+.ax-contactV2 .ax-panel--dark {
+  background: rgba(10, 15, 25, 0.55) !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  box-shadow: 0 18px 55px rgba(0, 0, 0, 0.30) !important;
+  backdrop-filter: blur(8px);
+  color: #fff;
+}
+
 .ax-infoRow {
   display: grid;
   grid-template-columns: 110px 1fr;
   gap: 12px;
   padding: 10px 0;
-  border-bottom: 1px solid rgba(255,255,255,0.08);
-}
-
-.ax-infoRow:last-child {
-  border-bottom: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12) !important;
 }
 
 .ax-infoKey {
   font-weight: 900;
-  color: rgba(255,255,255,0.72);
+  color: rgba(255, 255, 255, 0.75) !important;
 }
 
 .ax-infoVal {
   font-weight: 800;
-  color: #fff;
+  color: #fff !important;
 }
 
 .ax-note {
   margin-top: 14px;
   padding: 12px;
   border-radius: 14px;
-  background: rgba(255,255,255,0.08);
-  color: rgba(255,255,255,0.80);
+  background: rgba(255, 255, 255, 0.10) !important;
+  color: rgba(255, 255, 255, 0.82) !important;
   line-height: 1.6;
   font-size: 13px;
 }
 
-/* Form */
+/* Form stays white for usability */
+.ax-contactV2 .ax-formV2.ax-panel {
+  background: rgba(255, 255, 255, 0.96) !important;
+  color: #0b1220 !important;
+  border: 1px solid rgba(0, 0, 0, 0.08) !important;
+  box-shadow: 0 18px 55px rgba(0, 0, 0, 0.30) !important;
+}
+
 .ax-formV2 .ax-fieldV2 {
   display: grid;
   gap: 8px;
@@ -645,7 +424,7 @@
 .ax-formV2 .ax-fieldV2 span {
   font-size: 13px;
   font-weight: 900;
-  color: rgba(0,0,0,0.72); /* form on white panel */
+  color: rgba(0, 0, 0, 0.72) !important;
 }
 
 .ax-formV2 input,
@@ -653,14 +432,16 @@
   width: 100%;
   padding: 12px 12px;
   border-radius: 12px;
-  border: 1px solid rgba(0,0,0,0.14);
+  border: 1px solid rgba(0, 0, 0, 0.14) !important;
   outline: none;
   font-size: 14px;
+  background: #fff !important;
+  color: #0b1220 !important;
 }
 
 .ax-formV2 input:focus,
 .ax-formV2 textarea:focus {
-  border-color: rgba(11,18,32,0.55);
+  border-color: rgba(11, 18, 32, 0.55);
 }
 
 .ax-full {
@@ -670,11 +451,14 @@
 .ax-hint {
   margin-top: 10px;
   font-size: 12px;
-  color: rgba(0,0,0,0.55);
+  color: rgba(0, 0, 0, 0.55);
   line-height: 1.6;
 }
 
-/* Responsive */
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
 @media (max-width: 900px) {
   .ax-aboutV2__grid {
     grid-template-columns: 1fr;
@@ -697,20 +481,346 @@
   }
 }
 
-/* SMALL BUSINESS SECTION */
+/* =========================================================
+   VISIBILITY BOOST + REMOVE SQUARE EDGES (About + Contact)
+   Paste at END of HomePage.css
+   ========================================================= */
 
-.home-smallbusiness {
-  background-color: #f5f7fa; /* light grey */
-  padding: 80px 0;
+/* Stronger overlay so text is clearer */
+.section-overlay--dark,
+.section-overlay--featured {
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.72) 0%,
+    rgba(0, 0, 0, 0.55) 45%,
+    rgba(0, 0, 0, 0.72) 100%
+  ) !important;
+  backdrop-filter: blur(2px) !important;
 }
 
-.home-smallbusiness h2 {
-  text-align: center;
-  margin-bottom: 10px;
+/* Header glass: rounder + more contrast */
+.home-featured__inner,
+.sb-head,
+.ax-aboutV2__header,
+.ax-contactV2__header {
+  border-radius: 28px !important;
+  padding: 22px 22px !important;
+  background: rgba(0, 0, 0, 0.42) !important;
+  border: 1px solid rgba(255, 255, 255, 0.16) !important;
+  box-shadow: 0 26px 80px rgba(0, 0, 0, 0.45) !important;
 }
 
-.home-smallbusiness p {
-  text-align: center;
-  margin-bottom: 40px;
-  color: #555;
+/* Titles brighter + stronger shadow */
+.home-featured__inner h2,
+.sb-head h2,
+.ax-aboutV2__header h2,
+.ax-contactV2__header h2 {
+  color: #ffffff !important;
+  text-shadow: 0 14px 45px rgba(0, 0, 0, 0.75) !important;
+}
+
+/* Body text brighter + clearer */
+.home-featured__inner p,
+.sb-head p,
+.ax-aboutV2__header p,
+.ax-contactV2__header p {
+  color: rgba(255, 255, 255, 0.94) !important;
+  text-shadow: 0 12px 35px rgba(0, 0, 0, 0.65) !important;
+}
+
+/* Make ALL dark-glass cards/panels rounded + softer */
+.ax-aboutV2 .ax-panel,
+.ax-aboutV2 .ax-ctaBox,
+.ax-aboutV2 .ax-statCard,
+.ax-contactV2 .ax-panel--dark,
+.home-featured .ax-card,
+.sb-card {
+  border-radius: 22px !important;
+  background: rgba(10, 15, 25, 0.62) !important;
+  border: 1px solid rgba(255, 255, 255, 0.16) !important;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.40) !important;
+  backdrop-filter: blur(10px) !important;
+}
+
+/* Make paragraph text in dark panels clearer */
+.ax-aboutV2 .ax-panel p,
+.ax-aboutV2 .ax-ctaBox p,
+.sb-card__desc {
+  color: rgba(255, 255, 255, 0.90) !important;
+}
+
+/* Pills: more spacing + rounded */
+.ax-pillRow {
+  gap: 12px !important;
+}
+.ax-pill {
+  border-radius: 999px !important;
+  padding: 10px 14px !important;
+  background: rgba(255, 255, 255, 0.14) !important;
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+}
+
+/* Contact info rows: clearer dividers */
+.ax-infoRow {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.16) !important;
+}
+.ax-infoKey {
+  color: rgba(255, 255, 255, 0.82) !important;
+}
+.ax-infoVal {
+  color: #fff !important;
+}
+.ax-note {
+  border-radius: 16px !important;
+}
+
+/* Form: remove sharp corners and match style */
+.ax-contactV2 .ax-formV2.ax-panel {
+  border-radius: 22px !important;
+  background: rgba(255, 255, 255, 0.97) !important;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.35) !important;
+}
+
+/* Inputs: rounder */
+.ax-formV2 input,
+.ax-formV2 textarea {
+  border-radius: 14px !important;
+}
+
+/* Buttons: rounder + better contrast */
+.ax-ctaBtn,
+.sb-btn,
+.ax-card__btn {
+  border-radius: 999px !important;
+}
+/* =========================================================
+   WIDER HEADER BACKGROUNDS + MEDIUM GREY
+   ========================================================= */
+
+.home-featured__inner,
+.sb-head,
+.ax-aboutV2__header,
+.ax-contactV2__header {
+
+  /* make header wider */
+  max-width: 1200px;
+  width: 92%;
+
+  /* spacing */
+  margin: 0 auto 40px;
+  padding: 28px 36px;
+
+  /* medium grey glass */
+  background: rgba(90, 90, 90, 0.55);
+
+  /* rounded edges */
+  border-radius: 32px;
+
+  /* subtle border */
+  border: 1px solid rgba(255,255,255,0.18);
+
+  /* soft glass look */
+  backdrop-filter: blur(6px);
+
+  /* deeper shadow */
+  box-shadow: 0 28px 80px rgba(0,0,0,0.45);
+}
+
+
+/* make text clearer on grey */
+.home-featured__inner h2,
+.sb-head h2,
+.ax-aboutV2__header h2,
+.ax-contactV2__header h2{
+  color: #ffffff;
+  text-shadow: 0 10px 35px rgba(0,0,0,0.65);
+}
+
+
+/* paragraph text */
+.home-featured__inner p,
+.sb-head p,
+.ax-aboutV2__header p,
+.ax-contactV2__header p{
+  color: rgba(255,255,255,0.92);
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+
+/* small label text (About / Contact) */
+.ax-aboutV2__badge,
+.ax-contactV2__badge{
+  color: rgba(255,255,255,0.9);
+}
+
+/* ✅ HARD FIX: borders align correctly everywhere */
+.home *,
+.home *::before,
+.home *::after {
+  box-sizing: border-box;
+}
+
+/* ✅ HARD FIX: make About + Contact panels align perfectly */
+.ax-aboutV2__grid,
+.ax-contactV2__grid {
+  align-items: stretch !important;
+}
+
+.ax-aboutV2 .ax-panel,
+.ax-contactV2 .ax-panel,
+.ax-contactV2 .ax-panel--dark,
+.ax-contactV2 .ax-formV2.ax-panel {
+  min-height: 100% !important;
+  border-width: 1px !important;
+  border-style: solid !important;
+  border-radius: 22px !important;
+}
+
+.home-featured__inner,
+.sb-head,
+.ax-aboutV2__header,
+.ax-contactV2__header {
+  max-width: 1200px !important;
+  width: 92% !important;
+  margin: 0 auto 40px !important;
+  padding: 28px 36px !important;
+  background: rgba(90, 90, 90, 0.55) !important;
+  border-radius: 32px !important;
+  border: 1px solid rgba(255,255,255,0.18) !important;
+  backdrop-filter: blur(6px) !important;
+  box-shadow: 0 28px 80px rgba(0,0,0,0.45) !important;
+}
+
+
+/* =========================================================
+   CONTACT: make BOTH panels same dark-glass + clean borders
+   Paste at END of HomePage.css
+   ========================================================= */
+
+.ax-contactV2__grid {
+  align-items: stretch !important;
+}
+
+/* Make both panels identical */
+.ax-contactV2 .ax-panel--dark,
+.ax-contactV2 .ax-formV2.ax-panel {
+  background: rgba(10, 15, 25, 0.62) !important;
+  color: #fff !important;
+
+  border: 1px solid rgba(255, 255, 255, 0.16) !important;
+  border-radius: 22px !important;
+
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.40) !important;
+  backdrop-filter: blur(10px) !important;
+
+  min-height: 100% !important;
+  overflow: hidden;
+}
+
+/* Remove the "white" look on the form side */
+.ax-contactV2 .ax-formV2 h3 {
+  color: #fff !important;
+}
+
+/* Labels in form */
+.ax-contactV2 .ax-formV2 .ax-fieldV2 span {
+  color: rgba(255, 255, 255, 0.85) !important;
+}
+
+/* Inputs: dark glass style */
+.ax-contactV2 .ax-formV2 input,
+.ax-contactV2 .ax-formV2 textarea {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border: 1px solid rgba(255, 255, 255, 0.16) !important;
+  color: #fff !important;
+
+  border-radius: 14px !important;
+}
+
+.ax-contactV2 .ax-formV2 input::placeholder,
+.ax-contactV2 .ax-formV2 textarea::placeholder {
+  color: rgba(255, 255, 255, 0.55) !important;
+}
+
+.ax-contactV2 .ax-formV2 input:focus,
+.ax-contactV2 .ax-formV2 textarea:focus {
+  outline: none;
+  border-color: rgba(255, 255, 255, 0.35) !important;
+}
+
+/* Button: match theme */
+.ax-contactV2 .ax-formV2 .ax-ctaBtn--dark.ax-full {
+  background: rgba(255, 255, 255, 0.14) !important;
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+  color: #fff !important;
+  border-radius: 999px !important;
+}
+
+.ax-contactV2 .ax-formV2 .ax-ctaBtn--dark.ax-full:hover {
+  background: rgba(255, 255, 255, 0.18) !important;
+}
+
+/* Fix the weird divider lines on left panel */
+.ax-contactV2 .ax-infoRow {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.10) !important;
+  padding: 12px 0 !important;
+}
+
+.ax-contactV2 .ax-infoKey {
+  color: rgba(255, 255, 255, 0.78) !important;
+}
+
+.ax-contactV2 .ax-infoVal {
+  color: #fff !important;
+}
+
+/* Hint text should be visible on dark background */
+.ax-contactV2 .ax-hint {
+  color: rgba(255, 255, 255, 0.65) !important;
+}
+/* =========================================================
+   MAKE ABOUT + CONTACT CARDS SAME BACKGROUND COLOR
+   ========================================================= */
+
+/* shared card background */
+:root{
+  --panel-bg: rgba(20, 25, 35, 0.65);
+  --panel-border: rgba(255,255,255,0.16);
+}
+
+/* About panels */
+.ax-aboutV2 .ax-panel,
+.ax-aboutV2 .ax-ctaBox,
+.ax-aboutV2 .ax-statCard {
+  background: var(--panel-bg) !important;
+  border: 1px solid var(--panel-border) !important;
+  border-radius: 22px !important;
+}
+
+/* Contact panels (both sides) */
+.ax-contactV2 .ax-panel--dark,
+.ax-contactV2 .ax-formV2.ax-panel {
+  background: var(--panel-bg) !important;
+  border: 1px solid var(--panel-border) !important;
+  border-radius: 22px !important;
+  color: #fff !important;
+}
+
+/* remove white form look */
+.ax-contactV2 .ax-formV2 input,
+.ax-contactV2 .ax-formV2 textarea{
+  background: rgba(255,255,255,0.08) !important;
+  border: 1px solid rgba(255,255,255,0.16) !important;
+  color: #fff !important;
+}
+
+/* labels */
+.ax-contactV2 .ax-formV2 .ax-fieldV2 span{
+  color: rgba(255,255,255,0.85) !important;
+}
+
+/* hint text */
+.ax-contactV2 .ax-hint{
+  color: rgba(255,255,255,0.65) !important;
 }
