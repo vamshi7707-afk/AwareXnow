@@ -110,7 +110,6 @@ export default function HomePage() {
         <div className="section-content">
           <div className="ax-wrap">
             <header className="ax-aboutV2__header">
-              <div className="ax-badge">About</div>
               <h2>About Us</h2>
               <p>
                 AwareXNow is a social awareness platform built to turn everyday
@@ -223,7 +222,6 @@ export default function HomePage() {
         <div className="section-content">
           <div className="ax-wrap">
             <header className="ax-contactV2__header">
-              <div className="ax-badge ax-badge--dark">Contact</div>
               <h2>Contact Us</h2>
               <p>
                 Questions, feedback, or help with a campaign? Send us a message
